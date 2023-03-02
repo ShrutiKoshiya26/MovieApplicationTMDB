@@ -40,7 +40,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int ITEM = 0;
     private static final int LOADING = 1;
 
-
     private List<Result> movieResults;
     private Context context;
 
@@ -114,6 +113,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                                 movieVH.mProgress.setVisibility(View.GONE);
+
                                 return false;
                             }
 
@@ -126,6 +126,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 return false;
                             }
                         })
+                        .error(R.drawable.noimg)
                         .centerCrop()
                         .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
                         .into(movieVH.mPosterImg);
@@ -167,6 +168,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         for (Result result : moveResults) {
             add(result);
         }
+        notifyDataSetChanged();
 
     }
 

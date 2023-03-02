@@ -91,12 +91,16 @@ public class DetailsActivity extends AppCompatActivity {
                             .load(BASE_URL_IMG + response.body().getPosterPath())
                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                             .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+                            .error(R.drawable.noimg)
                             .into(binding.imgPoster);
                     binding.yearTxt.setText(response.body().getReleaseDate().substring(0, 4)  // we want the year only
                             + " | "
                             + response.body().getOriginalLanguage().toUpperCase());
                     binding.titleTxt.setText(response.body().getTitle());
                     binding.descTxt.setText(response.body().getOverview());
+
+                    binding.releasedateTxt.setText("Release Date : " + response.body().getReleaseDate());
+                    binding.ratingsTxt.setText("Popularity  : " + response.body().getPopularity() + "");
 
                     binding.mainProgress.setVisibility(View.GONE);
                 } catch (Exception e) {

@@ -130,6 +130,29 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp" />
 
+                <TextView
+                    android:id="@+id/releasedateTxt"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:fontFamily="@font/textfontstyle"
+                    android:gravity="center|start"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+                <TextView
+                    android:id="@+id/ratingsTxt"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:fontFamily="@font/textfontstyle"
+                    android:gravity="center|start"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+
             </LinearLayout>
 
         </LinearLayout>

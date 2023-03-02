@@ -1,17 +1,15 @@
 package com.movietest.displaymovie.activity;
 
 import static com.movietest.displaymovie.utils.UtilKeys.API_KEY;
+import static com.movietest.displaymovie.utils.UtilKeys.SPKEY_SORTING;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -21,19 +19,13 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.movietest.displaymovie.R;
@@ -41,9 +33,10 @@ import com.movietest.displaymovie.adapter.PaginationAdapter;
 import com.movietest.displaymovie.api.MovieApi;
 import com.movietest.displaymovie.api.MovieService;
 import com.movietest.displaymovie.classes.MovieComparator;
+import com.movietest.displaymovie.classes.SharedPreferenceClass;
 import com.movietest.displaymovie.databinding.ActivityMainBinding;
 import com.movietest.displaymovie.models.Result;
-import com.movietest.displaymovie.models.TopRatedMovies;
+import com.movietest.displaymovie.models.AllMovies;
 import com.movietest.displaymovie.utils.PaginationScrollListener;
 
 import java.util.Collections;
@@ -78,12 +71,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private int menuitemClickposition = 0;
 
 
+    String sortingType = "popularity.desc";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
         setClicks();
 
@@ -91,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         movieService = MovieApi.getClient().create(MovieService.class);
 
         setAdapter();
-
 
     }
 
@@ -114,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        loadNextPage(menuitemClickposition);
+                        loadNextPage();
                     }
                 }, 1000);
             }
@@ -176,25 +170,29 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
 
+         /*   case R.id.action_sort_moviename:
 
-            case R.id.action_sort_moviename:
 
                 menuitemClickposition = 0;
-                loadFirstPage(menuitemClickposition);
+                sortingType = "original_title.asc";
+                SharedPreferenceClass.save(this, SPKEY_SORTING, sortingType);
+                loadFirstPage();
                 break;
-
+*/
             case R.id.action_sort_rating:
                 Log.e(TAG, "onMenuItemClick: " + menuItem.getItemId());
-
+                sortingType = "popularity.desc";
                 menuitemClickposition = 1;
-                loadFirstPage(menuitemClickposition);
+                SharedPreferenceClass.save(this, SPKEY_SORTING, sortingType);
+                loadFirstPage();
                 break;
 
             case R.id.action_sort_date:
                 Log.e(TAG, "onMenuItemClick: " + menuItem.getItemId());
-
+                sortingType = "release_date.desc";
                 menuitemClickposition = 2;
-                loadFirstPage(menuitemClickposition);
+                SharedPreferenceClass.save(this, SPKEY_SORTING, sortingType);
+                loadFirstPage();
                 break;
 
             default:
@@ -204,27 +202,27 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
 
-    private void loadFirstPage(int menuItemclickPosition) {
+    private void loadFirstPage() {
 
-        callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
+        callTopRatedMoviesApi(sortingType).enqueue(new Callback<AllMovies>() {
             @Override
-            public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
+            public void onResponse(Call<AllMovies> call, Response<AllMovies> response) {
                 // Got data. Send it to adapter
 
                 Log.e(TAG, "onMenuItemClick: " + response);
 
                 List<Result> results = fetchResults(response);
                 binding.mainProgress.setVisibility(View.GONE);
-                Collections.sort(results, new MovieComparator(menuItemclickPosition));
-
                 adapter.setMovies(results);
+
+                //  adapter.setMovies(results);
 
                 if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
                 else isLastPage = true;
             }
 
             @Override
-            public void onFailure(Call<TopRatedMovies> call, Throwable t) {
+            public void onFailure(Call<AllMovies> call, Throwable t) {
                 t.printStackTrace();
 
             }
@@ -233,31 +231,29 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
 
-    private List<Result> fetchResults(Response<TopRatedMovies> response) {
-        TopRatedMovies topRatedMovies = response.body();
-        return topRatedMovies.getResults();
+    private List<Result> fetchResults(Response<AllMovies> response) {
+        AllMovies allMovies = response.body();
+        return allMovies.getResults();
     }
 
-    private void loadNextPage(int menuItemclickPosition) {
+    private void loadNextPage() {
 
-        callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
+        callTopRatedMoviesApi(sortingType).enqueue(new Callback<AllMovies>() {
             @Override
-            public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
+            public void onResponse(Call<AllMovies> call, Response<AllMovies> response) {
                 adapter.removeLoadingFooter();
                 isLoading = false;
 
                 List<Result> results = fetchResults(response);
-                Collections.sort(results, new MovieComparator(menuItemclickPosition));
 
                 adapter.addAll(results);
-
 
                 if (currentPage != TOTAL_PAGES) adapter.addLoadingFooter();
                 else isLastPage = true;
             }
 
             @Override
-            public void onFailure(Call<TopRatedMovies> call, Throwable t) {
+            public void onFailure(Call<AllMovies> call, Throwable t) {
                 t.printStackTrace();
 
             }
@@ -265,11 +261,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
 
-    private Call<TopRatedMovies> callTopRatedMoviesApi() {
+    private Call<AllMovies> callTopRatedMoviesApi(String sortingType) {
         return movieService.getTopRatedMovies(
                 API_KEY,
                 "en_US",
-                currentPage
+                currentPage, sortingType
         );
     }
 
@@ -279,7 +275,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     protected void onResume() {
         super.onResume();
         registerInternetCheckReceiver();
-        loadFirstPage(1);
+
+        sortingType = SharedPreferenceClass.read(this, SPKEY_SORTING, sortingType);
+
+        loadFirstPage();
     }
 
     @Override
@@ -367,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             if (!internetConnected) {
                 internetConnected = true;
 
-                loadFirstPage(menuitemClickposition);
+                loadFirstPage();
             }
         }
     }

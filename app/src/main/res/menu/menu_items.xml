@@ -12,8 +12,8 @@
         android:id="@+id/action_sort_date"
         android:title="Sort By Date"/>
 
-    <item
+  <!--  <item
         android:id="@+id/action_sort_moviename"
-        android:title="Sort By Name"/>
+        android:title="Sort By Name"/>-->
 
 </menu>
