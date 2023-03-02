@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="battermyself.mindfulmeditation.affirmationmyself.Activity.MainActivity">
+
+
+    <item
+        android:id="@+id/action_sort_rating"
+        android:title="Sort By Ratings" />
+
+    <item
+        android:id="@+id/action_sort_date"
+        android:title="Sort By Date"/>
+
+    <item
+        android:id="@+id/action_sort_moviename"
+        android:title="Sort By Name"/>
+
+</menu>
