@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Movie Application</string>
+
+    <string name="defaultyear">2020</string>
+    <string name="defaulttitle">Movie Title</string>
+    <string name="defaultdesc">"Movie Description "</string>
+    <string name="title_main">Movie List</string>
+    <string name="title_details">Movie Details</string>
+
+
 </resources>

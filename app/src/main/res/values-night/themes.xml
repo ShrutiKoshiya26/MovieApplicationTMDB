@@ -1,10 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MovieApplication" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.MovieApplication" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryDark">@color/purple_700</item>
-        <item name="colorAccent">@color/teal_200</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!-- Customize your theme here. -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
     </style>
+
+    <style name="progressStyle" parent="Theme.MaterialComponents.Light">
+        <item name="colorAccent">@color/background</item>
+    </style>
+
+    <!--popupmenu style-->
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/colorPrimaryDark</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="colorControlHighlight">@color/ripple_color</item>
+    </style>
+
 </resources>
