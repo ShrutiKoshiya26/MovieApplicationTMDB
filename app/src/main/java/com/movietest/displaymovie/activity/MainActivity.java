@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
          /*   case R.id.action_sort_moviename:
 
-
                 menuitemClickposition = 0;
                 sortingType = "original_title.asc";
                 SharedPreferenceClass.save(this, SPKEY_SORTING, sortingType);
